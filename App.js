@@ -8,7 +8,10 @@ const CurrentPageWidget = ({
   noteList, 
   setCurrentPage,
   addNote,
-  deleteNote
+  deleteNote,
+  editNote,
+  currentNote,
+  setCurrentNote
 }) => {
   switch (currentPage) {
     case 'home':
@@ -17,12 +20,13 @@ const CurrentPageWidget = ({
           noteList={noteList}
           setCurrentPage={setCurrentPage}
           deleteNote={deleteNote}
+          setCurrentNote={setCurrentNote}
         />
       )
     case "add":
       return <AddNote setCurrentPage={setCurrentPage} addNote={addNote} />
     case 'edit':
-      return <EditNote />
+      return <EditNote setCurrentPage={setCurrentPage} editNote={editNote} currentNote={currentNote} />
     default:
       return <Home />
   }
@@ -39,6 +43,8 @@ const App = () => {
         'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
     },
   ])
+
+  const [currentNote, setCurrentNote] = useState(null)
 
   const addNote = (title, desc) => {
     const id =
@@ -58,6 +64,10 @@ const App = () => {
     setNoteList(noteList.filter(note => note.id !== id))
   }
 
+  const editNote = (id, title, desc) => {
+    setNoteList(noteList.map(note => note.id === id ? { ...note, title, desc } : note))
+  }
+
   return (
     <CurrentPageWidget
       currentPage={currentPage}
@@ -65,6 +75,9 @@ const App = () => {
       noteList={noteList}
       addNote={addNote}
       deleteNote={deleteNote}
+      editNote={editNote}
+      currentNote={currentNote}
+      setCurrentNote={setCurrentNote}
     />
   )
 }
